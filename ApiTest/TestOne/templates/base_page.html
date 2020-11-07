@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试中台</title>
+    <!--    <link rel="stylesheet" type="text/css" href="/static/201908059658/css/normalize.css"/>&lt;!&ndash;CSS RESET&ndash;&gt;-->
+    <!--    <link rel="stylesheet" type="text/css" href="/static/201908059658/css/htmleaf-demo.css">&lt;!&ndash;演示页面样式，使用时可以不引用&ndash;&gt;-->
+    <!--awesome font include-->
+    <link type="text/css" rel="stylesheet" href="/static/201908059658/assets/css/font-awesome.min.css"/>
+    <!--include plugin css-->
+    <link type="text/css" rel="stylesheet" href="/static/201908059658/src/jquery-rvnm.css"/>
+</head>
+<body>
+<nav id="navbar" class="">
+    <ul>
+        <li>
+            <a href="#">
+                <i class="fa fa-bell-o"></i>
+                项目管理
+            </a>
+            <ul>
+                <li>
+                    <a href="/prj_list">
+                        项目列表
+                    </a>
+                </li>
+                <li>
+                    <a href="/api_list">
+                        接口库
+                    </a>
+                </li>
+                <li>
+                    <a href="/case_list">
+                        用例库
+                    </a>
+                </li>
+
+            </ul>
+
+        </li>
+    </ul>
+</nav>
+<div class="calendar">
+    <div class="title">
+        <h1 class="green" id="calendar-title">Month</h1>
+        <h2 class="green small" id="calendar-year">Year</h2>
+        <a href="" id="prev">Prev Month</a>
+        <a href="" id="next">Next Month</a>
+    </div>
+    <div class="body">
+        <div class="lightgrey body-list">
+            <ul>
+                <li>MON</li>
+                <li>TUE</li>
+                <li>WED</li>
+                <li>THU</li>
+                <li>FRI</li>
+                <li>SAT</li>
+                <li>SUN</li>
+            </ul>
+        </div>
+        <div class="darkgrey body-list">
+            <ul id="days">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--TestOne/static/js/jquery-1.11.0.min.js-->
+<script src="/static/201908059658/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<!--include plugin js-->
+<script type="text/javascript" src="/static/201908059658/src/jquery-rvnm.js"></script>
+<!--js run code-->
+<script type="text/javascript">
+            $(function () {
+                var rvnMenu = $("#navbar").rvnm({
+//                    mode: 'mobile',
+//                    responsive: false,
+                    searchable: true,
+                    theme: 'dark-lesb'
+                });
+                console.log(rvnMenu);
+//                rvnMenu.setMode('minimal');
+                rvnMenu.setTheme('dark-ruby');
+            });
+
+
+
+</script>
+<!--<div style="background: linear-gradient(to bottom,#f696bf,#7ef5e5); text-align: center; border-radius: 5px; box-shadow: 4px 4px 10px #535353">-->
+<!--    <h1 style="color: #fff9f4"> 欢迎来到我的接口测试平台！</h1>-->
+</body>
+</html>
