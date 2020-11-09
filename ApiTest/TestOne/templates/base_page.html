@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>测试中台</title>
+    <title>测试平台</title>
     <!--    <link rel="stylesheet" type="text/css" href="/static/201908059658/css/normalize.css"/>&lt;!&ndash;CSS RESET&ndash;&gt;-->
     <!--    <link rel="stylesheet" type="text/css" href="/static/201908059658/css/htmleaf-demo.css">&lt;!&ndash;演示页面样式，使用时可以不引用&ndash;&gt;-->
     <!--awesome font include-->
@@ -14,57 +14,69 @@
 <nav id="navbar" class="">
     <ul>
         <li>
-            <a href="#">
-                <i class="fa fa-bell-o"></i>
-                项目管理
+
+            <a href="/prj_list">
+                项目列表
             </a>
-            <ul>
-                <li>
-                    <a href="/prj_list">
-                        项目列表
-                    </a>
-                </li>
-                <li>
-                    <a href="/api_list">
-                        接口库
-                    </a>
-                </li>
-                <li>
-                    <a href="/case_list">
-                        用例库
-                    </a>
-                </li>
-
-            </ul>
-
         </li>
+        <li>
+            <a href="/api_debug/">
+                接口调试
+            </a>
+        </li>
+        <li>
+            <a href="/admin/" target="_blank">
+                后台管理
+            </a>
+        </li>
+        <li>
+            <a href="/help/">
+                帮助
+            </a>
+        </li>
+
     </ul>
+
 </nav>
-<div class="calendar">
-    <div class="title">
-        <h1 class="green" id="calendar-title">Month</h1>
-        <h2 class="green small" id="calendar-year">Year</h2>
-        <a href="" id="prev">Prev Month</a>
-        <a href="" id="next">Next Month</a>
-    </div>
-    <div class="body">
-        <div class="lightgrey body-list">
-            <ul>
-                <li>MON</li>
-                <li>TUE</li>
-                <li>WED</li>
-                <li>THU</li>
-                <li>FRI</li>
-                <li>SAT</li>
-                <li>SUN</li>
-            </ul>
-        </div>
-        <div class="darkgrey body-list">
-            <ul id="days">
-            </ul>
-        </div>
-    </div>
+<button id="menu_btn" onclick="display_menu()"
+        style="margin-left: 217px; background-color: #353c48; color: white; border-radius: 0px 50px 50px 0px">隐藏
+</button>
+<script>
+    function display_menu(){
+        menu = document.getElementById('navbar');
+        btn = document.getElementById('menu_btn');
+        if(btn.innerText == '隐藏'){
+            menu.style.display = 'none';
+            btn.style.marginLeft = '0px'
+            btn.innerText = '显示';
+        }else{
+            menu.style.display = 'block';
+            btn.style.marginLeft = '217px'
+            btn.innerText = '隐藏';
+        }
+    }
+
+
+
+
+
+
+
+</script>
+<div style="float: right;">
+    <a href="/welcome/">
+        <button style="float: right; height: 35px; width: 100px; background-color: #353c48;
+    color: white; font-size: large">🏠 主页
+        </button>
+    </a>
+    <br>
+    <a href="/logout/">
+        <button style="height: 35px; width: 100px; background-color: #353c48;
+                color: white; border-radius: 0px 0px 0px 10px; font-size: large">退出
+        </button>
+    </a>
 </div>
+
 
 <!--TestOne/static/js/jquery-1.11.0.min.js-->
 <script src="/static/201908059658/js/jquery-1.11.0.min.js" type="text/javascript"></script>
@@ -86,8 +98,25 @@
 
 
 
+
+
+
+
+
+
+
 </script>
-<!--<div style="background: linear-gradient(to bottom,#f696bf,#7ef5e5); text-align: center; border-radius: 5px; box-shadow: 4px 4px 10px #535353">-->
-<!--    <h1 style="color: #fff9f4"> 欢迎来到我的接口测试平台！</h1>-->
+<div id="home"></div>
+<script>
+    $('#home').load('/home/'+'{{ page }}/{{ oid }}/')
+    if("{{ page }}" != 'home.html'){
+        document.getElementById('menu_btn').click();
+    }
+
+</script>
+<!--<script>-->
+
+<!--</script>-->
+
 </body>
 </html>

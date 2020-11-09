@@ -2,21 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-</head>
-<body style="text-align:center">
-    <h1>欢迎使用 测试中台系统</h1>
-    <h1>Welcome to ApiTest</h1>
-    <div style="border: 1px solid black; width:200px; text-align:left; margin-left:-webkit-calc(50% - 100px); padding-left: 10px">
-        <h2>如何使用?</h2>
-        1.打开左侧菜单<br>
-        2.找到要用的功能<br>
-        1.点击进入<br><br>
-    </div>
-    <h2>更新信息</h2>
-    <span>项目模块管理上线，并修复已知bug</span>
+    <style>
+        body{
+            background: url("/static/阿尔卑斯山日出.jpg");
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        textarea{
+            background:transparent;  //  背景透明
+            border-style:none;   // 边框不显示
+            text-indent:75px;   //首行缩进
 
-    <h2>反馈</h2>
+        }
+
+    </style>
+</head>
+<body>
+<div style="text-align:center">
+    <h1 style="color: #7fffd4">欢迎 {{ username }} 使用 接口测试平台</h1>
+    <h3 style="color: #7fffd4">Welcome to ApiTest</h3>
+    <br>
+    <!--    <h2>如何使用?</h2>-->
+    <!--    <div style="width:150px; text-align:left; margin-left:-webkit-calc(50% - 100px); padding-left: 10px">-->
+    <!--        1.打开左侧菜单<br>-->
+    <!--        2.找到要用的功能<br>-->
+    <!--        3.点击进入<br><br>-->
+    <!--    </div>-->
+    <!--    <h2>更新信息</h2>-->
+    <!--    <span>项目模块管理上线，并修复已知bug</span>-->
+    <h2 style="color: #7fffd4">吐槽大会</h2>
+    <br>
+    <textarea name="" id="tucao_input" cols="50" rows="10" style="border-radius: 5px;
+            padding-left: 10px; box-shadow: 4px 4px 9px grey"
+              placeholder="匿名吐槽专用，点击 呸 按钮即可怒喷开发者"></textarea>
+    <br>
+    <button onclick="pei()" style="border-radius: 10px 10px 30px 30px; width: 100px">呸！</button>
+    <br><br><br><br>
     <span>如有问题，请发邮件至：xxxxxxxx@qq.com</span>
     <span>或进入<a href="">本平台的优化建议</a>中进行反馈</span>
+    <br>
+    <br>
+    <!--    <img src="/static/WechatIMG5389.png" alt="哦豁，图片飞了" style="width: 600px" id="tucao_input">-->
+
+</div>
+<script>
+        function pei() {
+            $.get("/pei/",{
+                "tucao_text":document.getElementById('tucao_input').value,
+            },function (ret) {
+                alert('开发者已接招！ (。_。...')
+            })
+        }
+</script>
 </body>
 </html>

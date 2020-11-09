@@ -14,10 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from TestOne.views import *
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('welcome/', welcome),
+    path('admin/', admin.site.urls),
+    path('welcome/', welcome),  # 欢迎页面
+    re_path('^home/(?P<page>.+)/(?P<oid>.*)/$', home),  # 主页
+    path('login/', login),  # 登录页面
+    path('login_action/', login_action),  # 执行登录接口
+    path('accounts/login/', login),  # 非登录状态自动跳回登录页面
+    path('logout/', logout),  # 非登录状态自动跳回登录页面
+    path('pei/', pei),  # 非登录状态自动跳回登录页面
+    path('help/', help_doc),  # 非登录状态自动跳回登录页面
 ]

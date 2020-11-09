@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="/static/201908059658/js/jquery-1.11.0.min.js" type="text/javascript">
+
+    </script>
+    <meta charset="UTF-8">
+    <title>平台登录</title>
+
+    <style>
+        body{
+            background: url('/static/001849-15912011292fcb.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .wqrf_input{
+            width: 90%;
+            background-color: #d1d0d1;
+            border-radius: 50px;
+            text-align: center;
+            float: right;
+            margin-right: 10px;
+            height: 30px;
+            border: 0;
+        }
+        span{
+            color: #f25e78;
+        }
+    </style>
+</head>
+<body>
+    <div style="box-shadow: 4px 4px 6px #2a262a; margin-left: -webkit-calc(50% - 150px);width: 300px;
+        background-color: white; opacity: 0.6; border-radius: 20px; text-align: center">
+        <strong>
+            <span style="font-size: xx-large; color: #1e1107">接口测试平台</span>
+        </strong>
+        <br>
+        <span style="font-size: large;">欢迎使用</span><br><br>
+            <input id="username" type="text" class="wqrf_input" placeholder="用户名">
+            <br><br><br>
+            <input id="password" type="password" class="wqrf_input" placeholder="密码">
+            <br><br><br><br>
+        <button onclick="login()" style="width: 90%; height:35px; border-radius: 50px; background-color: #068e01;
+            color: white; font-size: large; border: 0; box-shadow: 4px 4px 4px #a0a0a0">
+            登  录</button><br><br>
+        <span style="font-size: small">若首次使用，请 <a href="">联系管理员</a></span>
+        <br><br>
+    </div>
+
+<script>
+    function login(){
+        username = document.getElementById('username').value;
+        password = document.getElementById('password').value;
+        $.get("/login_action/",{
+            "username": username,
+            "password": password
+        },function (ret){
+        if(ret == 'True'){
+            document.location.href = '/welcome/'
+        }else{
+            alert('账号密码都输不对！╮(￣▽￣)╭')
+            }
+        })
+    }
+</script>
+</body>
+</html>
