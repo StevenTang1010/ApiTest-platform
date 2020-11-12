@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>项目列表</title>
+    <style>
+        .btn{
+<!--            background-color: white;-->
+        }
+    </style>
+</head>
+<body>
+<button onclick="javascript:document.getElementById('add_project_div').style.display='block'" style="
+    border-radius: 0px 0px 10px 10px;" type="button" class="btn btn-primary btn-lg btn-block">新  增  项  目
+</button>
+<h3 style="padding-left: 10px;color: #353c48">项目列表 <span
+        style="font-size: small;color: grey;">（这里显示全部项目,您可以进入他人的项目中查看）</span></h3>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>项目id</th>
+        <th>项目名称</th>
+        <th>创建人</th>
+        <th>备注</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i in projects %}
+    <tr>
+        <td>{{ i.id }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.user }}</td>
+        <td>{{ i.remark }}</td>
+        <td>
+            <button class="btn btn-success" onclick="javascript:document.location.href='/apis/{{ i.id }}'">进入</button>
+            <button class="btn btn-danger" onclick="delete_project('{{ i.id }}')">删除</button>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<!--删除按钮弹窗效果-->
+<script>
+    function delete_project(id){
+        if(confirm('想清楚了要删吗？！') == false){return}
+        $.get('/delete_project/',{
+            'id': id
+        },function (ret) {
+            document.location.reload()
+        })
+    }
+</script>
+<div id="add_project_div" style="width: 40%; background-color: white; border: 1px solid black;
+        position: absolute; left: 30%; top: 200px; padding-left: 10px;
+        box-shadow: 4px 4px 8px grey; border-radius: 5px; display: none">
+    <h3>项目名称 （最多32字）</h3>
+    <br>
+    <input id="project_name" type="text" placeholder="请输入项目名称" style="width:95%">
+    <br>
+    <br>
+    <input id="project_remark" type="text" placeholder="看心情写备注" style="width:95%">
+    <br><br>
+    <button onclick="javascript:document.getElementById('add_project_div').style.display='none'" class="btn btn-danger">取消</button>
+    <button onclick="add_project()" class="btn btn-success">确定</button>
+    <br><br>
+</div>
+<!--删除项目脚本-->
+<script>
+    function add_project(){
+        project_name = document.getElementById('project_name').value;
+        project_remark = document.getElementById('project_remark').value;
+        $.get('/add_project/', {
+            'project_name': project_name,
+            'project_remark': project_remark,
+        },function (ret){
+            document.location.reload();
+        })
+    }
+</script>
+</body>
+</html>

@@ -14,37 +14,65 @@
             text-indent:75px;   //首行缩进
 
         }
-
     </style>
 </head>
 <body>
 <div style="text-align:center">
-    <h1 style="color: #7fffd4">欢迎 {{ username }} 使用 接口测试平台</h1>
-    <h3 style="color: #7fffd4">Welcome to ApiTest</h3>
+    <h1 style="color: #3e2935">欢迎 {{ username }} 使用 接口测试平台</h1>
+    <h3 style="color: #3e2935">Welcome to ApiTest</h3>
     <br>
-    <!--    <h2>如何使用?</h2>-->
-    <!--    <div style="width:150px; text-align:left; margin-left:-webkit-calc(50% - 100px); padding-left: 10px">-->
-    <!--        1.打开左侧菜单<br>-->
-    <!--        2.找到要用的功能<br>-->
-    <!--        3.点击进入<br><br>-->
-    <!--    </div>-->
-    <!--    <h2>更新信息</h2>-->
-    <!--    <span>项目模块管理上线，并修复已知bug</span>-->
-    <h2 style="color: #7fffd4">吐槽大会</h2>
+
+    <!--这里是超链接传送门-->
+    <div style="border: 1px solid black; border-radius: 10px 0px 0px 10px; color: #3e2935; opacity: 1; text-align:center">
+        <h2>芝麻开门 (￣▽￣)~*</h2>
+        <strong>
+            {% for i in hrefs %}
+            <a href="{{ i.href }}" target="_blank">{{ i.name }}</a><br>
+            {% endfor %}
+        </strong>
+        <br>
+    </div>
     <br>
-    <textarea name="" id="tucao_input" cols="50" rows="10" style="border-radius: 5px;
+    <div style="border: 1px solid black;border-radius: 10px 0px 0px 10px;text-align: center; opacity: 1">
+        <h2 style="color: #3e2935">您的项目</h2>
+        <span style="color: black">
+            {#       这里存放后续的个人项目列表循环，类似传送门的套路 ,点击自己创建的项目可以直接进入项目内     #}
+            {% for i in projects %}
+            <span>{{ i.name }}</span><br>
+            {% endfor %}
+            </span>
+        <br>
+    </div>
+    <br>
+    <div style="border: 1px solid black;border-radius: 10px 0px 0px 10px;text-align: center;opacity: 1">
+        <h2 style="color: #3e2935">最新消息</h2>
+        <span style="color: black">
+            帮助页面上线；<br>
+            后台开启，仅限有管理权限同学使用；<br>
+            项目列表上线，您现在可以进入所有项目内了 <br>
+                </span>
+        <br>
+    </div>
+    <br>
+    <div style="bottom: 5px">
+        <h2 style="color: #3e2935">吐槽大会</h2>
+        <br>
+        <textarea name="" id="tucao_input" cols="100" rows="10" style="border-radius: 5px;
             padding-left: 10px; box-shadow: 4px 4px 9px grey"
-              placeholder="匿名吐槽专用，点击 呸 按钮即可怒喷开发者"></textarea>
-    <br>
-    <button onclick="pei()" style="border-radius: 10px 10px 30px 30px; width: 100px">呸！</button>
-    <br><br><br><br>
-    <span>如有问题，请发邮件至：xxxxxxxx@qq.com</span>
-    <span>或进入<a href="">本平台的优化建议</a>中进行反馈</span>
-    <br>
-    <br>
+                  placeholder="匿名吐槽专用，点击 呸 按钮即可怒喷开发者"></textarea>
+        <br>
+        <button onclick="pei()" style="border-radius: 10px 10px 30px 30px; width: 150px">呸！</button>
+        <br><br><br><br>
+        <span>如有问题，请发邮件至：xxxxxxxx@qq.com</span>
+        <span>或进入<a href="">本平台的优化建议</a>中进行反馈</span>
+        <br>
+        <br>
+    </div>
+
     <!--    <img src="/static/WechatIMG5389.png" alt="哦豁，图片飞了" style="width: 600px" id="tucao_input">-->
 
 </div>
+<!--提交吐槽异步请求逻辑-->
 <script>
         function pei() {
             $.get("/pei/",{
