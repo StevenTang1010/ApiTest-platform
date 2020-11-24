@@ -7,7 +7,10 @@
 
     </style>
 </head>
+
 <body>
+
+<!--顶部导航栏-->
 <nav class="navbar navbar-default" role="navigation"
      style="position: absolute;top: 0px;left: 80px;width:-webkit-calc(100% - 200px);z-index: 1">
     <div class="container-fluid">
@@ -25,29 +28,42 @@
     </div>
 </nav>
 <br><br>
+
+<!--接口列表-->
 <table class="table table-striped">
     <thead>
-        <tr>
-            <th style="width: 10%">id</th> <th style="width: 20%">接口名称</th> <th style="width: 40%">url</th> <th>操作</th>
-        </tr>
+    <tr>
+        <th style="width: 10%">id</th>
+        <th style="width: 20%">接口名称</th>
+        <th style="width: 40%">url</th>
+        <th>操作</th>
+    </tr>
     </thead>
     <tbody>
-         {% for i in apis %}
-             <tr>
-                <td>{{ i.prj_id }}</td><td>{{ i.api_name }}</td> <td>{{ i.api_url }}</td>  <td>
-                 <button onclick="" class="btn btn-success">调试</button>
-                 <button onclick="" class="btn btn-primary">复制</button>
-                 <button onclick="" class="btn btn-warning">异常值测试</button>
-                 <button onclick="" class="btn btn-primary">备注</button>
-                 <button onclick="document.location.href='/prj_api_del/{{ i.id }}/'" class="btn btn-danger" >删除</button></td>
-            </tr>
-        {% endfor %}
+    {% for i in apis %}
+        <tr>
+            <td>{{ i.id }}</td>
+            <td>{{ i.api_name }}</td>
+            <td>{{ i.api_url }}</td>
+            <td>
+                <button onclick="open_debug('{{ i.id }}','{{ i.api_name }}')" class="btn btn-success">调试</button>
+                <button onclick="" class="btn btn-primary">复制</button>
+                <button onclick="" class="btn btn-warning">异常值测试</button>
+                <button onclick="open_des('{{ i.id }}')" class="btn btn-primary">备注</button>
+                <button onclick="document.location.href='/prj_api_del/{{ i.id }}/'" class="btn btn-danger">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>
+
+<!--底部按钮组-->
 <div style="position: fixed; bottom:1px; width: 100%; background-color: #f8f8f8;
         text-align: center; border: 1px solid #e7e7e7">
     <div class="btn-group">
-        <button type="button" class="btn btn-default" onclick="document.location.href='/prj_api_add/{{ project.id }}/'">新增接口</button>
+        <button type="button" class="btn btn-default" onclick="document.location.href='/prj_api_add/{{ project.id }}/'">
+            新增接口
+        </button>
         <button type="button" class="btn btn-default">全局请求头</button>
         <button type="button" class="btn btn-default">全局域名</button>
         <button type="button" class="btn btn-default">接口文档导入</button>
@@ -56,5 +72,358 @@
         <button type="button" class="btn btn-default">登录态接口</button>
     </div>
 </div>
+<!--添加修改备注的弹层窗口-->
+<div id="description" style="width: 40%; background-color: white; border: 1px solid black;
+        position: absolute; left: 30%; top: 200px; padding-left: 10px;
+        box-shadow: 4px 4px 8px grey; border-radius: 5px; display: none">
+    <input id="api_id" type="text" style="display: none">
+    <br>
+    <textarea id="des_value" cols="100" rows="5" placeholder="只是个描述，不用太认真🙃"></textarea>
+    <!--    style="width:100%； height:80%" -->
+    <br><br>
+    <button onclick="close_des()" class="btn btn-danger">取消</button>
+    <button onclick="save_des()" class="btn btn-success">保存</button>
+    <br><br>
+</div>
+<script>
+    function open_des(id) {
+        document.getElementById('des_value').value = '';  //清空上一个打开的内容
+        $.get('/get_des/', {
+            'api_id': id
+        }, function (ret) {
+            document.getElementById('description').style.display = 'block';
+            document.getElementById('api_id').value = id;
+            document.getElementById('des_value').value = ret;
+        })
+    }
+
+    function save_des() {
+        api_id = document.getElementById('api_id').value;
+        des_value = document.getElementById('des_value').value;
+        $.get('/save_des/', {
+            'api_id': api_id,
+            'des_value': des_value
+        }, function (ret) {
+            document.getElementById('description').style.display = 'none';
+        })
+    }
+
+    function close_des() {
+        document.getElementById('description').style.display = 'none';
+    }
+
+</script>
+
+<!--接口调试弹层窗口-->
+<div id="debug" style="display:none; border-radius:5px; width:80%; position:fixed;
+        left:10%; top:10%; background-color:#3c4043; color:white; padding-left:10px; box-shadow: 4px 4px 8px grey">
+
+    <div class="btn-group" style="float:right">
+        <button onclick="save_debug_api()" class="btn btn-success">保存</button>
+        <button onclick="close_debug()" class="btn btn-danger">取消</button>
+    </div>
+    <h4>接口调试：
+        <small id="debug_api_id" style="color:greenyellow"></small>-
+        <input type="text" id="debug_api_name" style="padding-left:5px; width:50%; color:#329104"></h4>
+
+    <ul class="nav navbar-nav" style="width:98%">
+        <li> <!--请求方式-->
+            <select name="" id="debug_method" style="height:40px;" class="form-control">
+                <option value="none">请求方式</option>
+                <option value="post"> POST</option>
+                <option value="get"> GET</option>
+                <option value="put"> PUT</option>
+                <option value="delete"> DELETE</option>
+            </select>
+        </li>
+        <li style="width:-webkit-calc(100% - 222px)"> <!--url输入框-->
+            <input id="debug_url" type="text" style="padding-left:10px; width:100%; height:40px; color:black;"
+                   placeholder="URL 例: /abcd/efgh/">
+        </li>
+        <li> <!--发送请求按钮-->
+            <button type="button" class="btn btn-default" style="height:40px; width:120px;"><span
+                    style="font-size:large">SEND</span></button>
+        </li>
+    </ul>
+    <br><br><br>
+
+    <!-- host输入框 -->
+    <ul class="nav navbar-nav" style="width:98%">
+        <li style="width:-webkit-calc(100% - 60px)">
+            <input id="debug_host" type="text" style="padding-left:10px; width:100%; height:40px; color:black;"
+                   placeholder="HOST 例: http(s)://xxx.zzz.com">
+        </li>
+        <li> <!--清除内容按钮-->
+            <span><button type="button" style="height:40px; width:60px;" class="btn btn-default">Clear</button></span>
+        </li>
+    </ul>
+    <br><br><br>
+
+    <!-- headers输入框 -->
+    <ul class="nav navbar-nav" style="width:98%">
+        <li style="width:-webkit-calc(100% - 60px)">
+            <input id="debug_headers" type="text" style="padding-left:10px; width:100%; height:40px; color:black;"
+                   placeholder='Headers 例: {"Content":"application/json"}'>
+        </li>
+        <li><!--清除内容按钮-->
+            <span><button type="button" style="height:40px; width:60px;" class="btn btn-default">Clear</button></span>
+        </li>
+    </ul>
+    <br><br><br>
+
+    <!-- 请求内容输入框tab -->
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active">
+            <a id="click_none" href="#none" data-toggle="tab">none</a>
+        </li>
+        <li><a href="#x-www-form-urlencoded" data-toggle="tab">x-www-form-urlencoded</a></li>
+        <li><a href="#form-data" data-toggle="tab">form-data</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">raw <b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                <li><a href="#Text" tabindex="-1" data-toggle="tab">Text</a></li>
+                <li><a href="#JavaScript" tabindex="-1" data-toggle="tab">JavaScript</a></li>
+                <li><a href="#Json" tabindex="-1" data-toggle="tab">Json</a></li>
+                <li><a href="#Html" tabindex="-1" data-toggle="tab">Html</a></li>
+                <li><a href="#Xml" tabindex="-1" data-toggle="tab">Xml</a></li>
+            </ul>
+        </li>
+        <li><a href="#response" data-toggle="tab">返回体</a></li>
+    </ul>
+
+    <!-- 请求内容输入框及返回体 -->
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="none" style="text-align:center; color:grey">
+            <h1>这个请求将不会携带任何请求体</h1>
+            <h3>This request will not carry any request-body</h3>
+            <br><br>
+        </div>
+        <!-- x-www-form-urlencoded内容输入框 -->
+        <div class="tab-pane fade" id="x-www-form-urlencoded">
+            <div class="table-responsive" style="width: 98%;color: black">
+                <table class="table table-bordered table-striped" id="myTable" style="background-color:white">
+                    <thead style="color: #337ab7;font-size: large">
+                    <tr>
+                        <td style="width: 30%">Key</td>
+                        <td style="width: 50%">Value</td>
+                    </tr>
+                    </thead>
+                    <tbody id="mytbody">
+                    <tr>
+                        <td>123</td>
+                        <td>123</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-default" id="add"><i class="fa fa-plus"></i> 添加新参数</button>
+            <script>
+                window.jQuery || document.write('<script src="/static/form-data/js/jquery-1.11.0.min.js"><\/script>')
+
+            </script>
+            <script type="text/javascript" src="/static/form-data/js/bootstable.js"></script>
+            <script type="text/javascript">
+                $('#mytable').SetEditable({
+                    $addButton: $('#add'),
+                });
+            </script>
+            <br><br>
+        </div>
+
+        <!-- form-data内容输入框 -->
+        <div class="tab-pane fade" id="form-data">
+            <div class="table-responsive" style="width: 98%;color: black">
+                <table class="table table-bordered table-striped" id="mytable2" style="background-color:white">
+                    <thead style="color: #337ab7;font-size: large">
+                    <tr>
+                        <td style="width: 30%">Key</td>
+                        <td style="width: 50%">Value</td>
+                    </tr>
+                    </thead>
+                    <tbody id="mytbody2">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-default" id="add2"><i class="fa fa-plus"></i> 添加新参数</button>
+            <script>
+                window.jQuery || document.write('<script src="/static/form-data/js/jquery-1.11.0.min.js"><\/script>')
+
+            </script>
+            <script type="text/javascript" src="/static/form-data/js/bootstable.js"></script>
+            <script type="text/javascript">
+                $('#mytable2').SetEditable({
+                    $addButton: $('#add2'),
+                });
+            </script>
+            <br><br>
+        </div>
+
+        <!-- Text内容输入框 -->
+        <div class="tab-pane fade" id="Text">
+            <textarea id="raw_Text" name="" cols="30" rows="10" style="color:black; width:98%; height:300px"></textarea>
+            <br><br>
+        </div>
+        <!-- JavaScript内容输入框 -->
+        <div class="tab-pane fade" id="JavaScript">
+            <textarea id="raw_JavaScript" name="" cols="30" rows="10"
+                      style="color:black; width:98%; height:300px"></textarea>
+            <br><br>
+        </div>
+        <!-- Json内容输入框 -->
+        <div class="tab-pane fade" id="Json">
+            <textarea id="raw_Json" name="" cols="30" rows="10" style="color:black; width:98%; height:300px"></textarea>
+            <br><br>
+        </div>
+        <!-- Html内容输入框 -->
+        <div class="tab-pane fade" id="Html">
+            <textarea id="raw_Html" name="" cols="30" rows="10" style="color:black; width:98%; height:300px"></textarea>
+            <br><br>
+        </div>
+        <!-- Xml内容输入框 -->
+        <div class="tab-pane fade" id="Xml">
+            <textarea id="raw_Xml" name="" cols="30" rows="10" style="color:black; width:98%; height:300px"></textarea>
+            <br><br>
+        </div>
+        <!-- 返回体内容输入框 -->
+        <div class="tab-pane fade" id="response">
+            <textarea id="raw_response" disabled="disabled" name="" cols="30" rows="10"
+                      style="color:black; width:98%; height:300px"></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- 调试弹层函数集合 -->
+<script>
+    // 清理弹层缓存
+    function clear_debug() {
+        document.getElementById("debug_api_id").innerText = '';
+        document.getElementById("debug_api_name").value = '';
+        document.getElementById("debug_method").value = '';
+        document.getElementById("debug_url").innerText = '';``
+        document.getElementById("debug_host").innerText = '';
+        document.getElementById("debug_headers").innerText = '';
+
+        // 初始化请求体编码格式
+        document.getElementById("click_none").click(); // 点击none标签
+        document.getElementById("mytbody").innerHTML = '<tr><td></td><td></td></tr>'; // 初始化内容
+        document.getElementById("mytbody2").innerHTML = '<tr><td></td><td></td></tr>';
+        // 清空请求体内容
+        document.getElementById("raw_Text").value = '';
+        document.getElementById("raw_JavaScript").value = '';
+        document.getElementById("raw_Json").value = '';
+        document.getElementById("raw_Html").value = '';
+        document.getElementById("raw_Xml").value = '';
+        // 清空返回体
+        document.getElementById("raw_response").value = '';
+        // 运行第三方表格插件的函数
+        $('#mytable').SetEditable({
+            $addButton: $('#add'),
+        });
+        $('#mytable2').SetEditable({
+            $addButton: $('#add2'),
+        });
+    }
+
+    // 打开调试弹层
+    function open_debug(id, name) {
+        clear_debug();
+        document.getElementById("debug").style.display = 'block';
+        document.getElementById("debug_api_id").innerText = id;
+        document.getElementById("debug_api_name").value = name;
+
+        // 异步请求获取接口数据
+        $.get('/get_api_data/', {
+            'api_id': id,
+        }, function (ret) {
+            console.log(ret)
+            // 接收返回值后的动作
+            document.getElementById('debug_api_name').value = ret.api_name;
+            document.getElementById('debug_method').value = ret.api_method;
+            document.getElementById('debug_url').value = ret.api_url;
+            document.getElementById('debug_host').value = ret.api_host;
+            document.getElementById('debug_headers').value = ret.api_header;
+        })
+    }
+
+    // 关闭调试弹层
+    function close_debug() {
+        document.getElementById('debug').style.display = 'none';
+    }
+
+    // 保存接口设置
+    function save_debug_api() {
+        // 获取所有接口输出数据
+        var api_name = document.getElementById('debug_api_name').value;
+        var debug_method = document.getElementById('debug_method').value;
+        var debug_url = document.getElementById('debug_url').value;
+        var debug_host = document.getElementById('debug_host').value;
+        var debug_headers = document.getElementById('debug_headers').value;
+        var debug_body_method = $('ul#myTab li[class="active"]')[0].innerText;
+        console.log(debug_body_method)
+        // 获取请求提
+        if (debug_body_method == 'none') {
+            var debug_request_body = ''
+        }
+        if (debug_body_method == 'form-data') {
+            var debug_request_body = []; //新建空列表用来存放后续的数据
+            var tbody = $("table#myTable tbody")[0]; // 获取该表格的内容部分
+            var trlist = tbody.children; // 获取下面所有tr，每个tr就是一个键值对
+            for (var i = 0; i < trlist.length; i++) {
+                var tdarr = trlist[i].children; // 获取tr下的2个td
+                var key = tdarr[0].innerText; // 获取key
+                var value = tdarr[1].innerText; // 获取value
+                debug_request_body.push([key, value]); // 将拿到的数据作为一个数据放到大数组中
+            }
+            debug_request_body = JSON.stringify(debug_request_body);
+        }
+        if (debug_body_method == 'x-www-form-urlencoded') {
+            var debug_request_body = []; //新建空列表用来存放后续的数据
+            var tbody = $("table#myTable2 tbody")[0]; // 获取该表格的内容部分
+            var trlist = tbody.children; // 获取下面所有tr，每个tr就是一个键值对
+            for (var i = 0; i < trlist.length; i++) {
+                var tdarr = trlist[i].children; // 获取tr下的2个td
+                var key = tdarr[0].innerText; // 获取key
+                var value = tdarr[1].innerText; // 获取value
+                debug_request_body.push([key, value]); // 将拿到的数据作为一个数据放到大数组中
+            }
+            debug_request_body = JSON.stringify(debug_request_body);
+        }
+        if (debug_body_method == 'Text') {
+            var debug_request_body = document.getElementById('Text').value;
+        }
+        if (debug_body_method == 'JavaScript') {
+            var debug_request_body = document.getElementById('JavaScript').value;
+        }
+        if (debug_body_method == 'Json') {
+            var debug_request_body = document.getElementById('Json').value;
+        }
+        if (debug_body_method == 'Html') {
+            var debug_request_body = document.getElementById('Html').value;
+        }
+        if (debug_body_method == 'Xml') {
+            var debug_request_body = document.getElementById('Xml').value;
+        }
+
+        var api_id = document.getElementById('debug_api_id').innerText; // 获取当前调试的接口id
+        // 发送异步请求，传参数
+        $.get('/api_save/', {
+            'api_id': api_id,
+            'api_name': api_name,
+            'debug_method': debug_method,
+            'debug_url': debug_url,
+            'debug_host': debug_host,
+            'debug_headers': debug_headers,
+            'debug_body_method': debug_body_method,
+            'debug_request_body': debug_request_body,
+        }, function (ret) {
+            document.location.reload();
+        })
+    }
+
+</script>
 </body>
 </html>

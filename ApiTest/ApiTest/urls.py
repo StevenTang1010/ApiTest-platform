@@ -30,9 +30,13 @@ urlpatterns = [
     path('prj_list/', projects),  # 非登录状态自动跳回登录页面
     path('delete_project/', delete_project),  # 删除项目逻辑接口
     path('add_project/', add_project),  # 添加项目逻辑接口
+    path('get_api_data/', get_api_data),  # 获取接口数据
     re_path('^apis/(?P<id>.*)/$', open_apis),  # 进入api接口库
     re_path('^prj_api_add/(?P<pid>.*)/$', prj_api_add),  # 新增接口
     re_path('^prj_api_del/(?P<aid>.*)/$', prj_api_del),  # 删除接口
+    path('get_des/', get_des),  # 获取接口备注
+    path('save_des/', save_des),  # 保存接口备注
+    path('api_save/', api_save),  # 保存接口备注
     re_path('^cases/(?P<id>.*)/$', cases),  # 进入用例库
     re_path('^prj_setting/(?P<id>.*)/$', prj_setting),  # 进入项目设置
     re_path('^save_prj_setting/(?P<id>.*)/$', save_prj_setting),  # 进入项目设置

@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from TestOne.models import DB_TuCao, DB_HomeHref, DB_Project, DB_Apis
+import json
 
 
 # Create your views here.
@@ -86,14 +87,15 @@ def projects(request):
     return render(request, 'base_page.html', {'page': 'prj_list.html', 'oid': ''})
 
 
-# 返回项目列表
+# 删除项目
 def delete_project(request):
     id = request.GET['id']
+    DB_Apis.objects.filter(prj_id=id).delete()
     DB_Project.objects.filter(id=id).delete()
     return HttpResponse('')
 
 
-# 返回项目列表
+# 添加项目
 def add_project(request):
     project_name = request.GET['project_name']
     project_remark = request.GET['project_remark']
@@ -136,6 +138,52 @@ def prj_api_del(request, aid):
     prj_id = DB_Apis.objects.filter(id=aid)[0].prj_id
     DB_Apis.objects.filter(id=aid).delete()
     return HttpResponseRedirect(f'/apis/{prj_id}/')
+
+
+# 获取接口数据
+def get_api_data(request):
+    api_id = request.GET['api_id']
+    api_data = DB_Apis.objects.filter(id=api_id).values()[0]
+    return HttpResponse(json.dumps(api_data), content_type='application/json')
+
+
+# 获取接口备注逻辑
+def get_des(request):
+    api_id = request.GET['api_id']
+    des_value = DB_Apis.objects.filter(id=api_id)[0].des
+    return HttpResponse(des_value)
+
+
+# 保存接口备注逻辑
+def save_des(request):
+    api_id = request.GET['api_id']
+    des_value = request.GET['des_value']
+    DB_Apis.objects.filter(id=api_id).update(des=des_value)
+    return HttpResponse('')
+
+
+# 保存接口调试内容
+def api_save(request):
+    # 提取所有请求数据
+    api_id = request.GET['api_id']
+    debug_method = request.GET['debug_method']
+    debug_url = request.GET['debug_url']
+    debug_host = request.GET['debug_host']
+    debug_headers = request.GET['debug_headers']
+    debug_body_method = request.GET['debug_body_method']
+    debug_request_body = request.GET['debug_request_body']
+    api_name = request.GET['api_name']
+    # 保存数据
+    DB_Apis.objects.filter(id=api_id).update(
+        api_method=debug_method,
+        api_url=debug_url,
+        api_header=debug_headers,
+        api_host=debug_host,
+        body_code=debug_body_method,
+        api_body=debug_request_body,
+        api_name=api_name,
+    )
+    return HttpResponse('success')
 
 
 # 进入用例设置

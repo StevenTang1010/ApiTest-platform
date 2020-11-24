@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>测试平台</title>
-    <!--    <link rel="stylesheet" type="text/css" href="/static/201908059658/css/normalize.css"/>&lt;!&ndash;CSS RESET&ndash;&gt;-->
-    <!--    <link rel="stylesheet" type="text/css" href="/static/201908059658/css/htmleaf-demo.css">&lt;!&ndash;演示页面样式，使用时可以不引用&ndash;&gt;-->
+    <!--    <link rel="stylesheet" type="text/css" href="/static/左侧导航栏/css/normalize.css"/>&lt;!&ndash;CSS RESET&ndash;&gt;-->
+    <!--    <link rel="stylesheet" type="text/css" href="/static/左侧导航栏/css/htmleaf-demo.css">&lt;!&ndash;演示页面样式，使用时可以不引用&ndash;&gt;-->
     <!--awesome font include-->
-    <link type="text/css" rel="stylesheet" href="/static/201908059658/assets/css/font-awesome.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/左侧导航栏/assets/css/font-awesome.min.css"/>
     <!--include plugin css-->
-    <link type="text/css" rel="stylesheet" href="/static/201908059658/src/jquery-rvnm.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/左侧导航栏/src/jquery-rvnm.css"/>
     <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="shortcut icon" href="/static/bitbug_favicon.ico">
 </head>
 <body>
 <nav id="navbar" class="">
@@ -40,67 +41,58 @@
 
 </nav>
 <button id="menu_btn" onclick="display_menu()"
-        style="margin-left: 217px; background-color: #353c48; color: white; border-radius: 0px 50px 50px 0px">隐藏
+        style="position:absolute; left: 188px; top:48%; z-index:999; height:35px;
+        background-color: #353c48; color: white; border:0; font-size: x-large"><
 </button>
 <!--左侧菜单隐藏展开逻辑-->
 <script>
-    function display_menu(){
+    function display_menu() {
         menu = document.getElementById('navbar');
         btn = document.getElementById('menu_btn');
-        if(btn.innerText == '隐藏'){
+        if (btn.innerText == '<') {
             menu.style.display = 'none';
-            btn.style.marginLeft = '0px'
-            btn.innerText = '显示';
-        }else{
+            btn.style.left = '0px'
+            btn.innerText = '>';
+        } else {
             menu.style.display = 'block';
-            btn.style.marginLeft = '217px'
-            btn.innerText = '隐藏';
+            btn.style.left = '188px'
+            btn.innerText = '<';
         }
     }
 
-
 </script>
-<div style="float: right;">
-    <a href="/welcome/">
-        <button style="float: right; height: 35px; width: 100px; background-color: #353c48;
-    color: white; font-size: large">🏠 主页
-        </button>
-    </a>
-    <br>
-    <a href="/logout/">
-        <button style="height: 35px; width: 100px; background-color: #353c48;
-                color: white; border-radius: 0px 0px 0px 10px; font-size: large">退出
-        </button>
-    </a>
+<div style="font-size: large;position: absolute;top: 0px;right: 0px;box-shadow: 4px 4px 8px grey;
+            padding-left: 5px;padding-right: 5px">
+    <a href="/welcome/" style="color: black;text-decoration: none"> 主页 </a>
+    <a href="/logout/" style="color: black;text-decoration: none"> 退出 </a>
 </div>
-
+<br>
 
 <!--TestOne/static/js/jquery-1.11.0.min.js-->
-<script src="/static/201908059658/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="/static/左侧导航栏/js/jquery-1.11.0.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 <!--include plugin js-->
-<script type="text/javascript" src="/static/201908059658/src/jquery-rvnm.js"></script>
+<script type="text/javascript" src="/static/左侧导航栏/src/jquery-rvnm.js"></script>
 <!--js run code-->
 <script type="text/javascript">
-            $(function () {
-                var rvnMenu = $("#navbar").rvnm({
+    $(function () {
+        var rvnMenu = $("#navbar").rvnm({
 //                    mode: 'mobile',
 //                    responsive: false,
-                    searchable: true,
-                    theme: 'dark-lesb'
-                });
-                console.log(rvnMenu);
+            searchable: true,
+            theme: 'dark-lesb'
+        });
+        console.log(rvnMenu);
 //                rvnMenu.setMode('minimal');
-                rvnMenu.setTheme('dark-ruby');
-            });
- d
+        rvnMenu.setTheme('dark-ruby');
+    });
 
 </script>
 <div id="home"></div>
 <!--基础页面直接加载home页面逻辑-->
 <script>
-    $('#home').load('/home/'+'{{ page }}/{{ oid }}/')
-    if("{{ page }}" != 'home.html'){
+    $('#home').load('/home/' + '{{ page }}/{{ oid }}/')
+    if ("{{ page }}" != 'home.html') {
         document.getElementById('menu_btn').click();
     }
 
